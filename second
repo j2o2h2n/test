@@ -1,1 +1,62 @@
+package com.lab.prog1.lab_prg1;
 
+import java.util.Scanner;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+@SpringBootApplication
+public class LabPrg1Application {
+
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		SpringApplication.run(LabPrg1Application.class, args);
+//		ApplicationContext ac = new ClassPathXmlApplicationContext("custtick.xml");
+		AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(AppConfig.class);
+		Customer cs = ac.getBean(Customer.class);
+		Ticket t = cs.getTicket();
+
+		while (true) {
+			System.out.println("1. insert the details\n 2. Display details \n" + "3. exit");
+			System.out.println("enter the choice");
+			int a = sc.nextInt();
+			switch (a) {
+			case 1:
+				System.out.println("enter the customer name");
+				cs.setName(sc.next());
+				System.out.println("enter the customer address");
+				cs.setAddress(sc.next());
+				
+				
+				System.out.println("enter the ticket number");
+				t.setTicno(sc.nextInt());
+				System.out.println("enter the ticket seat no");
+				t.setSeatno(sc.nextInt());
+				System.out.println("enter the ticket price");
+				t.setPrice(sc.nextInt());
+				System.out.println("enter the ticket Type - economic/gold/platinum");
+				t.setTicktype(sc.next());
+				cs.setTicket(t);
+				
+				break;
+			case 2:
+				System.out.println("---------Customer Details:----------");
+				System.out.println("Name:" + cs.getName() + " " + " Address:" + cs.getAddress());
+				
+				System.out.println("---------Ticket Details-------------s");
+				System.out.println("Ticket No: " + t.getTicno());
+				System.out.println("Ticket Type: " + t.getTicktype());
+				System.out.println("Ticket Seat No: " + t.getSeatno());
+				System.out.println("Ticket Price: " + t.getPrice());
+				break;
+			case 3:
+				System.exit(0);
+			}
+
+		}
+	}
+
+}
