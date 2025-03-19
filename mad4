@@ -47,3 +47,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
 }
+
+-------------------------------------------------------------------------------------------------------------------
+create a fragment 
+the change the first line of code in design 
+
+
+androidx.constraintlayout.widget.ConstraintLayout 
+
+
