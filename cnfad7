@@ -1,0 +1,189 @@
+Student
+
+package com.example.prg7;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+@Entity
+@Table(name = "student")
+public class Student {
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	private int id;
+
+	@Column
+	private String usn, name, address;
+
+	// Getters and Setters
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getUsn() {
+		return usn;
+	}
+
+	public void setUsn(String usn) {
+		this.usn = usn;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	@Override
+	public String toString() {
+		return "Student [id=" + id + ", usn=" + usn + ", name=" + name + ", address=" + address + "]";
+	}
+}
+
+-----------------------------------------------------------------------------------------------------------
+
+  studentRepository
+
+  package com.example.prg7;
+
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface StudentRepository extends JpaRepository<Student, Integer> {
+	Optional<Student> findByUsn(String usn);
+
+}
+
+
+--------------------------------------------------------------------------------------------
+
+  studentServices
+
+  package com.example.prg7;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class StudentService {
+	
+	@Autowired
+	StudentRepository sr;
+
+	// Method to retrieve all students
+	public List<Student> display() {
+		return sr.findAll();
+	}
+
+	// Optimized insert method (removed unnecessary ID)
+	public String insert(String usn, String name, String address) {
+		Student s = new Student();
+		s.setUsn(usn);
+		s.setName(name);
+		s.setAddress(address);
+		sr.save(s);
+		return "Inserted into the table";
+	}
+
+	// Optimized delete method
+	public String delete(String usn) {
+		Optional<Student> studentOpt = sr.findByUsn(usn);
+		if (studentOpt.isPresent()) {
+			sr.delete(studentOpt.get());
+		}
+		return "deleted";
+	}
+}
+----------------------------------------------------------------------------------------------
+
+  main file
+
+
+  package com.example.prg7;
+
+import java.util.Scanner;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+
+@SpringBootApplication
+public class Prg7Application {
+
+	public static void main(String[] args) {
+		ApplicationContext ac=SpringApplication.run(Prg7Application.class, args);
+		StudentService ss=ac.getBean(StudentService.class);
+		//create a menu driven program to execute the crud operations
+		
+		
+		Scanner sc=new Scanner(System.in);
+		while(true){
+			System.out.println("\nMenu");
+			System.out.println("1.Add student\n 2.View all student \n3.Delete student\n4.Exit");
+			System.out.println("Enter your choice");
+			int choice=sc.nextInt();
+			sc.nextLine();
+			switch(choice) {
+			case 1:
+				System.out.println("Enter student usn");
+				String usn=sc.next();
+				System.out.println("Enter student Name");
+				String name=sc.next();
+				System.out.println("Enter student Address");
+				String address=sc.next();
+				ss.insert(usn, name, address);
+				System.out.println("Student added successfully");
+				break;
+			case 2:
+				System.out.println("All student:");
+				System.out.println(ss.display());
+				break;
+			case 3:
+				System.out.println("Enter student usn to delete:");
+				String usn1=sc.next();
+				ss.delete(usn1);
+				break;
+			case 4:
+				System.out.println("Exitiing..........");
+				System.exit(0);
+				break;
+			default:
+				System.out.println("Invalid choice");
+			}
+			
+		}
+		
+	}
+
+}
+
+=-------------------------------------------------------------------------------------
+
+  appication properties               they will only give
+
+spring.datasource.url=jdbc:mysql://localhost:3306/student
+spring.datasource.driverClassName=com.mysql.cj.jdbc.Driver
+spring.datasource.username=mc039
+spring.datasource.password=Harimc@039
+spring.jpa.show-sql: true
+spring.jpa.hibernate.ddl-auto = update
+  
