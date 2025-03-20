@@ -1,1 +1,111 @@
+boook.java
 
+package lab.program3;
+
+public class Book {
+	int id;
+	String author, year, title;
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+	public String getYear() {
+		return year;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	@Override
+	public String toString() {
+		return "Book [id=" + id + ", author=" + author + ", year=" + year + ", title=" + title + "]";
+	}
+
+}
+
+---------------------------------------------------------------------------------------------------------------
+
+boookcontroller
+
+package lab.program3;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+
+@RestController
+@RequestMapping("/")
+public class BookController {
+	List<Book> blist = new ArrayList<Book>();
+	
+	@GetMapping
+	public List<Book> getBook(){
+		return blist;
+	}
+	@PostMapping
+	public List<Book> postBook(@RequestBody Book book){
+		blist.add(book);
+		return blist;
+	}
+	@PutMapping("/{id}")
+	public Book putBook(@PathVariable("id") int id, @RequestBody Book updatedBook) {
+	    for (int i = 0; i < blist.size(); i++) {
+	        if (blist.get(i).getId() == id) {
+	            blist.set(i, updatedBook);
+	            return updatedBook;
+	        }
+	    }
+		return updatedBook;   
+	}
+	@DeleteMapping("/{id}")
+	public Book deleteBook(@PathVariable("id") int id) {
+	    for (int i = 0; i < blist.size(); i++) {
+	        if (blist.get(i).getId() == id) {
+	            return blist.remove(i);
+	        }
+	    }
+		return null;
+	}
+	@GetMapping("/{id}")
+	public Book getBookById(@PathVariable("id") int id) {
+	    for (Book b : blist) {
+	        if (b.getId() == id) {
+	            return b;
+	        }
+	    }
+	    return null; 
+	}
+}
+
+------------------------------------------------------------------------------------------------
