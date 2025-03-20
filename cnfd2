@@ -1,0 +1,154 @@
+college
+
+package com.example.college;
+
+public class College {
+	String name, address;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	@Override
+	public String toString() {
+		return "College [name=" + name + ", address=" + address + "]";
+	} 
+}
+
+
+--------------------------------------------------------------------------
+
+  departement
+
+  package com.example.college;
+
+public class Department {
+	int id;
+	String name,description;
+	College college;
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public College getCollege() {
+		return college;
+	}
+	public void setCollege(College college) {
+		this.college = college;
+	}
+	public Department(College college) {
+		super();
+		this.college = college;
+	}
+	@Override
+	public String toString() {
+		return "Department [id=" + id + ", name=" + name + ", description=" + description + "]";
+	}
+	
+}
+
+
+
+------------------------------------------------------------------------------------------
+
+  main file
+
+
+  package com.example.college;
+
+import java.util.Scanner;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+@SpringBootApplication
+public class Lab2Application {
+
+	public static void main(String[] args) {
+		SpringApplication.run(Lab2Application.class, args);
+		Scanner sc = new Scanner(System.in);
+		ApplicationContext ac = new ClassPathXmlApplicationContext("AppConfig.xml");
+//		AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(app.class);
+		Department dt = (Department) ac.getBean("department");
+		
+		while(true) {
+			System.out.println("1. Insert \n2.Display\n3.exit");
+			System.out.println("Enter Choice");
+			int ch = sc.nextInt();
+			switch(ch) {
+			case 1:
+				System.out.println("Enter Department name");
+				dt.setName(sc.next());
+				System.out.println("Enter Department number");
+				dt.setId(sc.nextInt());
+				System.out.println("Enter Department Description");
+				dt.setDescription(sc.next());
+				System.out.println("OK");
+				break;
+			
+			case 2:
+				System.out.println("DEPT DEATILS");
+				System.out.println("name: "+dt.getName()+"ID: "+dt.getId()+"Description: "+dt.getDescription());
+				System.out.println("CLG DETAILS");
+				College c = dt.getCollege();
+				System.out.println("clg name:" +c.getName());
+				System.out.println("clg address"+c.getAddress());
+				break;
+				
+			case 3:
+				System.exit(0);
+				
+			}
+			
+		}
+	}
+
+}
+
+-------------------------------------------------------------------------------------------------
+
+  app.class
+
+  <?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="college" class="com.example.college.College" scope="singleton">
+	<property name="name" value="RV College Of Engineering"/>
+	<property name="address" value="Mysore Road, Bengaluru"/>
+	</bean>
+	<bean id="department" class="com.example.college.Department" scope="prototype">
+	<constructor-arg name="college" ref="college"/>
+	</bean>
+</beans>
