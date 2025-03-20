@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item android:state_enabled="false" android:drawable="@drawable/button_disabled"/>
+    <item android:state_pressed="true" android:drawable="@drawable/button_pressed"/>
+    <item android:drawable="@drawable/button_default"/>
+
+</selector>
+
+--------------------------------------------------------------------------------------------
+
+package com.example.first;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CalendarView;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
+import android.widget.Switch;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+import com.google.android.material.snackbar.Snackbar;
+
+public class MainActivity extends AppCompatActivity {
+
+    ImageButton b;
+    ConstraintLayout c;
+    Switch s;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_main);
+
+        b = findViewById(R.id.ib);
+        c = findViewById(R.id.constraintLayout);
+        s = findViewById(R.id.switch1);
+
+        s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    b.setEnabled(true);
+                    s.setText("Enabled");
+                }else{
+                    b.setEnabled(false);
+                    s.setText("Disabled");
+                }
+            }
+        });
+
+        CalendarView calendarView = new CalendarView(getApplicationContext());
+        ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT);
+        c.addView(calendarView, layoutParams);
+
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v, "Hari Ketan is a good boy..!", Snackbar.LENGTH_LONG).show();
+            }
+        });
+
+
+
+    }
+}
