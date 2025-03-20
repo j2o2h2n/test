@@ -1,0 +1,100 @@
+product
+
+package com.example.lab5;
+
+
+import org.hibernate.validator.constraints.Length;
+
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
+public class Product {
+
+	@NotNull
+	@Min(value=1)
+	@Max(value=200)
+	int id;
+	
+	@NotNull
+	@Min(value=1)
+	@Max(value=50000)
+	int price;
+	
+	@NotEmpty
+	@Length(max=200)
+	String name;
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public int getPrice() {
+		return price;
+	}
+	public void setPrice(int price) {
+		this.price = price;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	@Override
+	public String toString() {
+		return "Product [id=" + id + ", price=" + price + ", name=" + name + "]";
+	}
+	
+}
+
+--------------------------------------------------------------------------------------
+
+
+  productcontroller
+
+  package com.example.lab5;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import jakarta.validation.Valid;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+
+@RestController
+@RequestMapping("/product")
+public class ProductController {
+
+    private final List<Product> plist = new ArrayList<>();
+
+//    @Autowired
+//    private Product product; // Injecting Product Bean
+
+    @GetMapping
+    public List<Product> getProduct() {
+        return plist;
+    }
+
+    @PostMapping
+    public ResponseEntity<?> postProduct(@Valid @RequestBody Product product, BindingResult br) {
+        List<String> fe = new ArrayList<>();
+        if (br.hasErrors()) {
+            for (FieldError error : br.getFieldErrors()) {
+                fe.add(error.getField() + " " + error.getDefaultMessage());
+            }
+            return ResponseEntity.badRequest().body(fe);
+        } else {
+            plist.add(product);
+            return ResponseEntity.ok(plist);
+        }
+    }
+
+
+---------------------------------------------------------------------------------------------
