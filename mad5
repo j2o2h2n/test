@@ -1,0 +1,236 @@
+design
+
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <EditText
+        android:id="@+id/editText1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="250dp"
+        android:layout_marginEnd="101dp"
+        android:layout_marginBottom="436dp"
+        android:ems="10"
+        android:hint="Username"
+        android:inputType="text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editText2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="105dp"
+        android:layout_marginTop="413dp"
+        android:layout_marginEnd="96dp"
+        android:layout_marginBottom="273dp"
+        android:ems="10"
+        android:hint="Password"
+        android:inputType="textPassword"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="165dp"
+        android:layout_marginTop="508dp"
+        android:layout_marginEnd="155dp"
+        android:layout_marginBottom="175dp"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+----------------------------------------------------------------------------
+
+MainActivity.java
+
+
+package com.example.lab5;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+import com.google.android.material.snackbar.Snackbar;
+
+public class MainActivity extends AppCompatActivity {
+
+    Button btn;
+    EditText et1, et2;
+    DBHandler db;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_main);
+
+        et1 =findViewById(R.id.editText1);
+        et2 = findViewById(R.id.editText2);
+        btn= findViewById(R.id.button);
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = et1.getText().toString();
+                String password = et2.getText().toString();
+                int id = db.checkUser (new User (name, password));
+                if (id == -1){
+                    Toast.makeText(MainActivity.this ,"user does not exist", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    Toast.makeText(MainActivity.this, "user" +name+ "Exist",Toast.LENGTH_LONG).show();
+                    Intent ints = new Intent(MainActivity.this, SecondActivity.class);
+                    startActivity(ints);
+                }
+            }
+        });
+
+        db = new DBHandler(MainActivity.this);
+        db.addUser(new User("Hari", "hari"));
+        db.addUser(new User("MCA", "mc039"));
+        db.addUser(new User("RVCE23MCA032", "1rv23mc039"));
+    }
+
+}
+
+
+------------------------------------------------------------------------------------------------------------
+
+DBHandler.java
+
+
+package com.example.lab5;
+
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
+class DBHandler extends SQLiteOpenHelper {
+
+    private static final int Db_Version =1;
+    private static final String Db_Name="user", Table_Name="user", User_id="id", User_name="name", User_password="password";
+    public DBHandler(MainActivity context) {
+        super(context,Db_Name,null,Db_Version);
+        
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db)
+    {
+        String Create_Table = "CREATE TABLE user (" + User_id + " INTEGER PRIMARY KEY, " + User_name + " TEXT, " + User_password + " TEXT " + ")" ;
+        db.execSQL(Create_Table);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
+    {
+        db.execSQL("DROP TABLE IF EXISTS " + Table_Name);
+        onCreate(db);
+    }
+
+    public void addUser(User usr)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(User_name,usr.getName());
+        cv.put(User_password,usr.getPassword());
+        db.insert(Table_Name, null,cv);
+        db.close();
+    }
+
+    public int checkUser(User us) {
+        int id = -1;
+        SQLiteDatabase db = this.getReadableDatabase() ;
+        Cursor cursor = db.rawQuery("SELECT id FROM user WHERE name=? AND password=?", new String[]
+                {
+                us.getName(), us.getPassword()
+        });
+        if (cursor.getCount()>0){
+            cursor.moveToFirst();
+            id = cursor.getInt(0);
+            cursor.close();
+        }
+        return id;
+
+    }
+}
+
+
+---------------------------------------------------------------------------------------------------
+
+user.java
+
+
+package com.example.lab5;
+
+class User {
+
+    int id;
+    String name, password;
+
+    public User(String name, String password) {
+        this.name = name;
+        this.password = password;
+    }
+
+    public User(int id, String name, String password) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+}
+
