@@ -1,3 +1,7 @@
+add dependendecies
+spring JPA 
+mysql driver
+
 Student
 
 package com.example.prg7;
