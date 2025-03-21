@@ -1,7 +1,7 @@
 go to maven repository
 
 get depenedcies like 
-hibernate orm
+hibernate core
 mysql connector j
 
 student
