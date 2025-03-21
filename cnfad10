@@ -67,6 +67,6 @@ now the browser open automatically with an whiteboard error , just add /book alo
 
 then open another terminal and type
 
-minikube bashboard
+minikube dashboard
 again a browser is open with the dashboard
  open the pods section and on the latest pod , click on the three dots and select scole and change from 3 to 4 and check for all the changes made like services etc
