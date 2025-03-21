@@ -1,5 +1,7 @@
 do program 7
 
+sudo docker pull mysql
+
 and add this file 
 
 docker-compose.yml
