@@ -1,1 +1,73 @@
+do program 7
+
+and add this file 
+
+docker-compose.yml
+
+version: "3.8"
+
+services:
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: Harimc@039
+      MYSQL_DATABASE: student
+      MYSQL_USER: mc039
+      MYSQL_PASSWORD: Harimc@039
+    networks:
+      - default
+    healthcheck:
+     test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+     interval: 10s
+     retries: 5 
+     start_period: 10s
+
+  app:
+    image: prg7/jcompose:latest
+    tty: true
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/student  
+      SPRING_DATASOURCE_DRIVERCLASSNAME: com.mysql.cj.jdbc.Driver
+      SPRING_DATASOURCE_USERNAME: mc039
+      SPRING_DATASOURCE_PASSWORD: Harimc@039
+    depends_on:
+      - db
+    networks:
+      - default
+
+
+------------------------------------------------------------------------------------------------ 
+
+dockerfile
+
+FROM openjdk:17-alpine
+WORKDIR /opt
+COPY /target/*.jar /opt/app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]
+
+
+
+Run as maven install
+
+  go to project folder
+
+sudo docker build -t prg7/jcompose .
+
+sudo docker-compose up
+
+
+new terminal
+
+sudo docker start -t prg7_app_1 
+
+new terminal 
+
+sudo docker exec -it prg7_app_1  /bin/sh
+
+inside the interactive mode
+
+    ls
+
+    java -jar app.jar
+
 
