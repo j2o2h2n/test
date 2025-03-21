@@ -1,3 +1,10 @@
+do program 4 and add
+
+run as maven install
+
+add this file and build ad run
+
+
 Dockerfile
 
 FROM eclipse-temurin:17-jdk-alpine
@@ -5,4 +12,8 @@ VOLUME /tmp
 COPY /target/*.jar app.jar
 ENTRYPOINT [ "java", "-jar", "/app.jar" ]
 
-  
+go to the project folder
+
+sudo docker build -t prg8 .
+
+sudo docker run -idtp 8080:8080 prg8
