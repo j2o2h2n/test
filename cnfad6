@@ -1,3 +1,9 @@
+go to maven repository
+
+get depenedcies like 
+hibernate orm
+mysql connector j
+
 student
 
 package hibe_exp;
