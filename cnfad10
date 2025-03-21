@@ -1,0 +1,72 @@
+Create a Dockerfile
+
+FROM openjdk:17-alpine
+
+WORKDIR /opt
+
+COPY target/*.jar /opt/app.jar
+
+ENTRYPOINT exec java $JAVA_OPTS -jar app.jar
+
+
+After creating the dockerfile, run the project as maven install and then create the yml file
+
+Create  a kuber.yml (this is deployment purpose)
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-deploy
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+      - name: myapp
+        image: my/prg10:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-service
+spec:
+  type: NodePort
+  selector:
+    app: myapp
+  ports:
+  - port: 8080
+    targetPort: 8080
+
+
+Open the terminal , install minikube and kuberctl if not install and check the status and version before starting
+
+minikube start
+minikube status
+eval $(minikube docker-env)
+docker images
+cd <root directory of the program>
+ls ( find the dockerfile)
+
+docker build -t my/prg10 .
+
+docker images ( find the my/prg10 added in the begining)
+kubectl apply -f kuber.yml
+minikube service myapp-service
+ 
+now the browser open automatically with an whiteboard error , just add /book along with the url number
+[] has to be displayed
+
+then open another terminal and type
+
+minikube bashboard
+again a browser is open with the dashboard
+ open the pods section and on the latest pod , click on the three dots and select scole and change from 3 to 4 and check for all the changes made like services etc
