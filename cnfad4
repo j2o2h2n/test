@@ -99,38 +99,38 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/product")
 public class ProductController {
-	List<Product> plist = new ArrayList<Product>() ;
-		
+	List<Product> plist = new ArrayList<Product>();
+
 	@GetMapping
-	public List<Product> getProduct(){
+	public List<Product> getProduct() {
 		return plist;
 	}
-	
+
 	@PostMapping
-	public List<Product> postProduct(@RequestBody Product product){
+	public List<Product> postProduct(@RequestBody Product product) {
 		plist.add(product);
 		return plist;
 	}
-	
-	@DeleteMapping("/{id}")
-	public List<Product> deleteProduct(@PathVariable int id){
-		for(Product p: plist) {
-			if (id == p.getId()) {
-				plist.remove(p);
-			}
-		}
-		return plist;
-	}
-	
+
 	@PutMapping("/{id}")
-	public List<Product> putProduct(@PathVariable("id") int id, @RequestBody Product product){
-		for(Product p: plist) {
-			if(product.getId() == p.getId()) {
-				p.setName(product.getName());
-				p.setPrice(product.getPrice());
+	public List<Product> putProduct(@PathVariable int id, @RequestBody Product product) {
+
+		for (int i = 0; i < plist.size(); i++) {
+			if (plist.get(i).getId() == id) {
+				plist.set(i, product);
 			}
-			
 		}
 		return plist;
 	}
-	
+
+	@DeleteMapping("/{id}")
+	public List<Product> deleteProduct(@PathVariable int id) {
+		for (int i = 0; i < plist.size(); i++) {
+			if (plist.get(i).getId() == id) {
+				plist.remove(i);
+			}
+		}
+		return plist;
+
+	}
+}
