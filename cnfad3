@@ -79,33 +79,25 @@ public class BookController {
 		return blist;
 	}
 	@PutMapping("/{id}")
-	public Book putBook(@PathVariable("id") int id, @RequestBody Book updatedBook) {
+	public List<Book> putBook(@PathVariable("id") int id, @RequestBody Book updatedBook) {
 	    for (int i = 0; i < blist.size(); i++) {
 	        if (blist.get(i).getId() == id) {
 	            blist.set(i, updatedBook);
-	            return updatedBook;
 	        }
 	    }
-		return updatedBook;   
+		return blist;   
 	}
 	@DeleteMapping("/{id}")
-	public Book deleteBook(@PathVariable("id") int id) {
+	public List<Book> deleteBook(@PathVariable("id") int id) {
 	    for (int i = 0; i < blist.size(); i++) {
 	        if (blist.get(i).getId() == id) {
-	            return blist.remove(i);
+	            blist.remove(i);
 	        }
 	    }
-		return null;
+		return blist;
 	}
-	@GetMapping("/{id}")
-	public Book getBookById(@PathVariable("id") int id) {
-	    for (Book b : blist) {
-	        if (b.getId() == id) {
-	            return b;
-	        }
-	    }
-	    return null; 
-	}
+	
 }
+
 
 ------------------------------------------------------------------------------------------------
