@@ -74,9 +74,6 @@ public class ProductController {
 
     private final List<Product> plist = new ArrayList<>();
 
-//    @Autowired
-//    private Product product; // Injecting Product Bean
-
     @GetMapping
     public List<Product> getProduct() {
         return plist;
@@ -94,6 +91,28 @@ public class ProductController {
             plist.add(product);
             return ResponseEntity.ok(plist);
         }
+    }
+    
+    @PutMapping("/{id}")
+    public ResponseEntity<?> putProduct(@PathVariable int id, @Valid @RequestBody Product product, BindingResult br) {
+        List<String> fe = new ArrayList<>();
+        
+        if (br.hasErrors()) {
+            for (FieldError error : br.getFieldErrors()) {
+                fe.add(error.getField() + " " + error.getDefaultMessage());
+            }
+            return ResponseEntity.badRequest().body(fe);
+        }
+
+        for (int i = 0; i < plist.size(); i++) {
+            if (plist.get(i).getId() == id) {
+                plist.set(i, product);
+                return ResponseEntity.ok(plist);
+            }
+        }
+
+        return ResponseEntity.notFound().build();
+    }
     }
 
 
