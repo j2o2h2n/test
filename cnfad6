@@ -1,4 +1,3 @@
-CREATE TABLE student (id INT AUTO_INCREMENT PRIMARY KEY,name TEXT,address TEXT,totalMarks INT);
 
 mysql -h 172.16.34.53 -u mca039 -p
 show databases;
