@@ -17,3 +17,20 @@ go to the project folder
 sudo docker build -t prg8 .
 
 sudo docker run -idtp 8080:8080 prg8
+
+------------------------------------------------
+to remove container 
+sudo docker rm -f ***
+
+to see the containers
+sudo docker container ls -a
+
+sudo docker stop ***
+
+
+
+For the images given
+
+sudo docker pull prasp123/prog3:latest
+
+sudo docker run -p 8080:8080 --name my_prog3_container prasp123/prog3:latest
