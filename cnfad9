@@ -6,36 +6,26 @@ and add this file
 
 docker-compose.yml
 
-version: "3.8"
+version: '3.8'
 
 services:
-  db:
-    image: mysql:latest
+  web:
+    image: prog7
+    build: .
+    stdin_open: true  # Ensure interactive console
+    tty: true         # Keep TTY open
     environment:
-      MYSQL_ROOT_PASSWORD: Harimc@039
-      MYSQL_DATABASE: student
-      MYSQL_USER: mc039
-      MYSQL_PASSWORD: Harimc@039
-    networks:
-      - default
-    healthcheck:
-     test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-     interval: 10s
-     retries: 5 
-     start_period: 10s
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/Lab7
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1234
 
-  app:
-    image: prg7/jcompose:latest
-    tty: true
+  db:
+    image: mysql
+    ports:
+      - "3307:3306"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/student  
-      SPRING_DATASOURCE_DRIVERCLASSNAME: com.mysql.cj.jdbc.Driver
-      SPRING_DATASOURCE_USERNAME: mc039
-      SPRING_DATASOURCE_PASSWORD: Harimc@039
-    depends_on:
-      - db
-    networks:
-      - default
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: Lab7
 
 
 ------------------------------------------------------------------------------------------------ 
@@ -53,23 +43,16 @@ Run as maven install
 
   go to project folder
 
-sudo docker build -t prg7/jcompose .
-
 sudo docker-compose up
 
 
 new terminal
 
-sudo docker start -t prg7_app_1 
+sudo docker start -i prg7_web_1 
 
-new terminal 
 
-sudo docker exec -it prg7_app_1  /bin/sh
+show database in terminal
 
-inside the interactive mode
-
-    ls
-
-    java -jar app.jar
+sudo docker exec -it prg7_db_1 bash
 
 
