@@ -1,51 +1,5 @@
 product
 
-package com.example.prg4;
-
-
-public class Product {package com.example.prg4;
-
-import java.util.ArrayList;
-
-@RestController
-@RequestMapping("/product")
-public class ProductController {
-	List<Product> plist = new ArrayList<Product>() ;
-		
-	@GetMapping
-	public List<Product> getProduct(){
-		return plist;
-	}
-	
-	@PostMapping
-	public List<Product> postProduct(@RequestBody Product product){
-		plist.add(product);
-		return plist;
-	}
-	
-	@DeleteMapping("/{id}")
-	public List<Product> deleteProduct(@PathVariable int id){
-		for(Product p: plist) {
-			if (id == p.getId()) {
-				plist.remove(p);
-			}
-		}
-		return plist;
-	}
-	
-	@PutMapping("/{id}")
-	public List<Product> putProduct(@PathVariable("id") int id, @RequestBody Product product){
-		for(Product p: plist) {
-			if(product.getId() == p.getId()) {
-				p.setName(product.getName());
-				p.setPrice(product.getPrice());
-			}
-			
-		}
-		return plist;
-	}
-
-
 	int id,price;
 	String name;
 	public int getId() {
@@ -74,11 +28,6 @@ public class ProductController {
 
 
 ----------------------------------------------------------------------------------------------------
-
-
-
-
-
   productcontroller
 
 
@@ -134,3 +83,8 @@ public class ProductController {
 
 	}
 }
+
+
+
+
+
