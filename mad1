@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar.make(v, "Hari Ketan is a good boy..!", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(v, "Button Clicked..!", Snackbar.LENGTH_LONG).show();
             }
         });
 
